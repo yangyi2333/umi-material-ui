@@ -6,11 +6,11 @@
   position: relative;
 }
 .leftBar{
-  position: absolute;
-  left: 0;
-  width: 30%;
-  background: #f0f7fa;
+  /*position: absolute;*/
+  /*left: 0;*/
+  width: 100%;
   height: 100%;
+  background: #f0f7fa;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,18 +35,33 @@
 }
 .dragBar{
   position: absolute;
-  left: 30%;
-  width: 10px;
-  height: 100%;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 10px;
   background: #bdbdbd;
 }
 .dragBar:hover{
-   cursor: e-resize;
+   cursor: n-resize;
  }
 .rightBar{
-  position: absolute;
-  right: 0;
-  width: calc(70% - 10px);
-  background: #f0f7fa;
+  /*position: absolute;*/
+  /*right: 0;*/
+  /*top: calc(50% + 10px);*/
+  width: 100%;
   height: 100%;
+  /*min-width: 500px;*/
+  background: #f0f7fa;
+  overflow-x: scroll;
+}
+@media screen and (min-width: 769px){
+  .dragBar{
+    left: 30%;
+    height: 100%;
+    width: 10px;
+    top: 0;
+  }
+  .dragBar:hover{
+    cursor: e-resize;
+  }
 }
