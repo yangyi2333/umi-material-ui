@@ -18,14 +18,67 @@
 .loginBox{
   width: 260px;
   padding: 1rem 2rem;
-  border: 1px solid #c6cacc;
+  border: 1px solid rgba(153,153,153,0.3);
   border-radius: 10px;
-  color: #666;
+  color: #333;
   background: #fff;
+  box-shadow:0px 1px 4px 0px rgba(153,153,153,0.3);
+  /*background: rgba(255,255,255,0.5);*/
+}
+.inputField{
+  border: 1px solid rgba(145, 145, 145, 0.48);
+  box-sizing: border-box;
+  margin: 1rem 0;
+  position: relative;
+}
+input{
+  background:#fff;
+  height: 2.4rem;
+  line-height: 2.4rem;
+  box-sizing: border-box;
+  padding-left: 2rem;
+  outline:none;
+  border:none;
+  width: 100%;
+
+}
+input:focus{
+  border:none;
+  background: #fff;
+}
+.inputFieldIcon{
+  position: absolute;
+  left: 0.4rem;
+  top: 0.6rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.submit{
+  border: none;
+  background-color: #00C9ED;
+  outline: none;
+  width: 100%;
+  height: 2.4rem;
+  line-height: 2.4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+.submit:hover{
+  box-shadow:2px 4px 10px 0 rgba(255, 255, 255, 0.5) inset;
 }
 .loginBoxTitle{
   padding: 0.8rem;
-  font-size: 2rem;
+  font-size: 1.6rem;
+  color: #00C9ED;
+}
+.loginBoxLogo{
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-right: 0.5rem;
 }
 .loginBoxInput{
   margin: 2rem;

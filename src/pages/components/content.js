@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { FixedSizeList } from 'react-window';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,6 +20,13 @@ const newStyles = {
     textAlign:'right'
   }
 };
+const mapStateToProps = (state) => {
+  return {
+    contentList : state.contentList,
+    isLogin : state.isLogin,
+  };
+};
+@connect(mapStateToProps)
 class ContentList extends React.Component{
   constructor(props){
     super(props);
@@ -28,44 +36,46 @@ class ContentList extends React.Component{
     }
   }
   componentWillReceiveProps(nextProps,nextContext){
-    console.log(nextProps.loginFlag)
-    if(!this.state.loginFlag && nextProps.loginFlag){
+    if(!this.state.loginFlag && nextProps.isLogin){
       this.setState({loginFlag:true},()=>{
-        this.renderList()
+        this.renderList(nextProps.contentList)
       })
+    }
+    if(nextProps.contentList && nextProps.contentList.length > 0){
+      this.renderList(nextProps.contentList)
     }
   }
   componentDidMount() {
-    if(sessionStorage.getItem('userInfo')){
-      this.setState({loginFlag:true},()=>{
-        this.renderList()
-      })
-    }else{
       this.renderList()
-    }
   }
 
-  renderRow = ({ index, style }) => {
+  renderRow = ({ data,index, style }) => {
     return (
       <ListItem button style={style} className={this.props.classes.item}>
-        <ListItemText primary={`Item ${index + 1}`} />
-        <ListItemText primary={`Item ${index + 1}`} className={this.props.classes.itemRight}/>
+        <ListItemText primary={`Item ${data[index]}`} />
+        <ListItemText primary={`Item ${data[index]}`} className={this.props.classes.itemRight}/>
       </ListItem>
     )
   }
-  renderList(){
-    console.log(this.state.loginFlag)
-    this.setState({listDom:this.state.loginFlag ? (
+  renderList(contentList){
+    let dom = '';
+    if(!this.state.loginFlag){
+      dom = (<div>请登录后查看内容</div>);
+    }else if(contentList.length > 0){
+      dom = (
         <AutoSizer>
           {
             ({height,width}) => (
-              <FixedSizeList height={height} width={isPc ? 1520 : width * 1.5} itemSize={100} itemCount={100000}>
+              <FixedSizeList height={height} width={isPc ? 1520 : width * 1.5} itemSize={100} itemCount={100000}
+                             itemData={contentList}>
                 { this.renderRow }
               </FixedSizeList>
             )
           }
         </AutoSizer>
-      ) : (<div>请登录后查看内容</div>)})
+      )
+    }
+    this.setState({listDom:dom})
   }
   render(){
     const { classes } = this.props;

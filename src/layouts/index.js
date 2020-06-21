@@ -1,5 +1,9 @@
 import styles from './index.css';
 
+
+window.onresize = function() {
+  window.location.reload();
+}
 function BasicLayout(props) {
   return (
     <div className={styles.normal}>

@@ -14,7 +14,8 @@
     "react-dom": "^16.13.1",
     "react-split-pane": "^0.1.91",
     "react-virtualized-auto-sizer": "^1.0.2",
-    "react-window": "^1.8.5"
+    "react-window": "^1.8.5",
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",

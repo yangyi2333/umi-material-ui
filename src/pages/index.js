@@ -1,17 +1,39 @@
 import React from 'react'
+import {connect} from 'react-redux';
 import styles from './index.css';
 import { withStyles  } from '@material-ui/core/styles';
-import {Button,TextField } from '@material-ui/core';
+import {MuiAlert  } from '@material-ui/core';
 import ContentList from '@/pages/components/content';
 import {IsPC} from './components/isPC'
 import SplitPane from 'react-split-pane';
+import username from '../assets/username.png'
+import password from '../assets/password.png'
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const newStyles = {
-  root : {
-    padding: '0 30px',
-  }
 };
 const isPc = IsPC();
+const mapStateToProps = (state) => {
+  return {
+    contentList : state.contentList,
+    updateTime:state.updateTime,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginIn:(username,password)=>{
+      dispatch({type:'TO_LOGIN_IN',username,password});
+    },
+    updateList:(times) => {
+      dispatch({type:'UPDATE_TIME',times});
+    }
+  };
+};
+
+@connect(mapStateToProps, mapDispatchToProps)
 class Split extends React.Component{
   constructor(props){
     super(props);
@@ -19,11 +41,22 @@ class Split extends React.Component{
       loginFlag:false,
       username:'',
       password:'',
+      timer:null,
     }
   }
   componentDidMount() {
+    if(sessionStorage.getItem('userInfo')){
+      let json = JSON.parse(sessionStorage.getItem('userInfo'))
+      this.updateLogin(json)
+    }
+    // this.props.updateList(this.props.updateTime + 1)
   }
-
+  updateLogin = (json) => {
+    this.props.loginIn(json.username,json.password);
+    this.setState({loginFlag:true,timer:setInterval(()=>{
+        this.props.updateList(this.props.updateTime + 1)
+      },10000)});
+  };
   submit = ()=>{
     let json = {
       username:this.state.username,
@@ -31,8 +64,9 @@ class Split extends React.Component{
     };
     if(json.username === 'admin' && json.password === '123456'){
       sessionStorage.setItem('userInfo',JSON.stringify(json));
-      this.setState({loginFlag:true})
+      this.updateLogin(json)
     }else{
+      alert('用户名或密码错误')
       return false
     }
   };
@@ -54,96 +88,30 @@ class Split extends React.Component{
           <div className={styles.leftBar}>
             <div className={styles.loginBox}>
               <div className={styles.loginBoxTitle}>
-                Umi-demo
+                {/*<img src={logo} alt=""  className={styles.loginBoxLogo}/>*/}
+                Sign in Here
               </div>
               <form noValidate autoComplete="off">
-                <TextField required id="filled-basic" label="Username" variant="filled"
-                           margin="normal" fullWidth  value={this.state.username} onChange={this.handleNameChange}/>
-                <TextField
-                  required
-                  id="filled-password-input"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  variant="filled"
-                  margin="normal" fullWidth
-                  value={this.state.password} onChange={this.handlePasswordChange}
-                />
+                <div className={styles.inputField}>
+                  <img src={username} alt="" className={styles.inputFieldIcon}/>
+                  <input type="text" placeholder="Username" value={this.state.username}
+                         onChange={this.handleNameChange} />
+                </div>
+                <div className={styles.inputField}>
+                  <img src={password} alt="" className={styles.inputFieldIcon}/>
+                  <input type="password" placeholder="Password" value={this.state.password}
+                         onChange={this.handlePasswordChange} />
+                </div>
               </form>
-              <Button variant="contained" color="primary" className={classes.margin} onClick={this.submit}>
-                Sign In
-              </Button>
+              <button className={styles.submit} onClick={this.submit}>Sign In</button>
             </div>
           </div>
           <div className={styles.rightBar}>
-            <ContentList loginFlag={this.state.loginFlag}/>
+            <ContentList />
           </div>
         </SplitPane>
       </div>
     )
   }
 }
-// export default function(split) {
-//   const classes = useStyles();
-//   let active = false,position = null;
-//   function onMouseDown(event) {
-//     console.log(event)
-//     const eventWithTouches = Object.assign({}, event, {
-//       touches: [{ clientX: event.clientX, clientY: event.clientY }],
-//     });
-//     onTouchStart(eventWithTouches);
-//   }
-//   function onTouchStart(event) {
-//     const { allowResize, split } = this.props;
-//     if (allowResize) {
-//       unFocus(document, window);
-//       const position =
-//         split === 'vertical'
-//           ? event.touches[0].clientX
-//           : event.touches[0].clientY;
-//       this.setState({
-//         active: true,
-//         position,
-//       });
-//     }
-//   }
-//   function onMouseMove() {
-//
-//   }
-//   function onTouchMove() {
-//
-//   }
-//   function onMouseUp() {
-//
-//   }
-//   return (
-//     <div className={styles.normal}>
-//       <div className={styles.leftBar}>
-//         <div className={styles.loginBox}>
-//           <div className={styles.loginBoxTitle}>
-//             Umi-demo
-//           </div>
-//           <form noValidate autoComplete="off">
-//             <TextField required id="filled-basic" label="Username" variant="filled"
-//                        margin="normal" fullWidth/>
-//             <TextField
-//               required
-//               id="filled-password-input"
-//               label="Password"
-//               type="password"
-//               autoComplete="current-password"
-//               variant="filled"
-//               margin="normal" fullWidth
-//             />
-//           </form>
-//           <Button variant="contained" color="primary" className={classes.margin}>
-//             Sign In
-//           </Button>
-//         </div>
-//       </div>
-//       {/*<div className={styles.dragBar} draggable onDragEnd={} onDragOver={}>*/}
-
-//     </div>
-//   );
-// }
 export default withStyles(newStyles)(Split);
